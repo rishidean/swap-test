@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gasless Cross-Chain Swaps POC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="my-4 text-center">
+            <h1>Gasless Cross-Chain Swaps</h1>
+            <p class="lead">Proof of Concept</p>
+        </header>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Swap Configuration</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="sourceChain" class="form-label">Source Chain</label>
+                            <select id="sourceChain" class="form-select">
+                                <option value="8453">Base (8453)</option>
+                                <option value="1">Ethereum (1)</option>
+                                <option value="43114">Avalanche (43114)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="sourceToken" class="form-label">Source Token</label>
+                            <select id="sourceToken" class="form-select">
+                                <!-- Will be populated dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="destChain" class="form-label">Destination Chain</label>
+                            <select id="destChain" class="form-select">
+                                <option value="501">Solana (501)</option>
+                                <option value="8453">Base (8453)</option>
+                                <option value="1">Ethereum (1)</option>
+                                <option value="43114">Avalanche (43114)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="destToken" class="form-label">Destination Token</label>
+                            <select id="destToken" class="form-select">
+                                <!-- Will be populated dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Amount</label>
+                            <div class="input-group">
+                                <input type="number" id="amount" class="form-control" placeholder="Amount to swap">
+                                <span class="input-group-text token-symbol">TOKEN</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="slippage" class="form-label">Slippage Tolerance (%)</label>
+                            <input type="number" id="slippage" class="form-control" value="0.5" min="0.1" max="10" step="0.1">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="recipientAddress" class="form-label">Recipient Address (optional)</label>
+                            <input type="text" id="recipientAddress" class="form-control" placeholder="Leave empty to use your wallet">
+                        </div>
+                        
+                        <button id="connectWallet" class="btn btn-primary mb-2">Connect Wallet</button>
+                        <button id="executeSwap" class="btn btn-success mb-2" disabled>Execute Gasless Swap</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Execution Log</h4>
+                        <button id="clearLog" class="btn btn-sm btn-outline-secondary float-end">Clear</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="swapSteps">
+                            <div class="step waiting" id="step-connect">
+                                <span class="step-number">1</span>
+                                <span class="step-text">Connect Wallet</span>
+                                <span class="step-status"></span>
+                            </div>
+                            <div class="step disabled" id="step-signature">
+                                <span class="step-number">2</span>
+                                <span class="step-text">EIP-2612 Permit Signature</span>
+                                <span class="step-status"></span>
+                            </div>
+                            <div class="step disabled" id="step-backend">
+                                <span class="step-number">3</span>
+                                <span class="step-text">Backend Verification</span>
+                                <span class="step-status"></span>
+                            </div>
+                            <div class="step disabled" id="step-gelato">
+                                <span class="step-number">4</span>
+                                <span class="step-text">Gelato Relay</span>
+                                <span class="step-status"></span>
+                            </div>
+                            <div class="step disabled" id="step-expand">
+                                <span class="step-number">5</span>
+                                <span class="step-text">Expand Cross-Chain Swap</span>
+                                <span class="step-status"></span>
+                            </div>
+                            <div class="step disabled" id="step-success">
+                                <span class="step-number">6</span>
+                                <span class="step-text">Final Asset Delivery</span>
+                                <span class="step-status"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5>Transaction Details</h5>
+                            <div class="log-container">
+                                <pre id="txDetails"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h4>Debugging Information</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <strong>Wallet Address:</strong> <span id="userAddress">Not connected</span>
+                        </div>
+                        <div class="mb-2">
+                            <strong>Chain ID:</strong> <span id="chainId">Not connected</span>
+                        </div>
+                        <div class="mb-2">
+                            <strong>Source Token Balance:</strong> <span id="tokenBalance">-</span>
+                        </div>
+                        <div class="mb-2">
+                            <strong>Nonce:</strong> <span id="currentNonce">-</span>
+                        </div>
+                        <div class="mb-2">
+                            <strong>Task ID:</strong> <span id="taskId">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.9.0/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
