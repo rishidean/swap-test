@@ -76,7 +76,7 @@ async function init() {
         updateStepStatus('step-connect', 'error', 'MetaMask not found');
     }
 }
-
+document.addEventListener("DOMContentLoaded", init);
 /**
  * Sets up event listeners for UI interactions.
  */
