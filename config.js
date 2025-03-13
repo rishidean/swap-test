@@ -6,12 +6,12 @@ const CONFIG = {
     networks: {
         1: {
             name: "Ethereum",
-            rpcUrl: "https://mainnet.infura.io/v3/YOUR_INFURA_KEY",
+            rpcUrl: "https://mainnet.infura.io/v3/645bdccc7aa0459fa476e69ea07aa8e0,
             explorerUrl: "https://etherscan.io"
         },
         8453: {
             name: "Base",
-            rpcUrl: "https://mainnet.base.org",
+            rpcUrl: "https://base-mainnet.infura.io/v3/645bdccc7aa0459fa476e69ea07aa8e0",
             explorerUrl: "https://basescan.org"
         },
         43114: {
@@ -101,10 +101,10 @@ const CONFIG = {
     // Expand and Gelato configurations
     expandRouterAddress: "0xExpandRouterAddress", // Replace with actual address
     expandApiUrl: "https://api.expand.network/v1",
-    expandApiKey: "YOUR_EXPAND_API_KEY", // Replace with your API key
+    expandApiKey: "hLY2lKP6tD8DcEwHkD7T7158jykpiyrL4BnoHfAx", // Replace with your API key
     
     gelatoRelayUrl: "https://relay.gelato.digital/relays/v2/sponsored-call",
-    gelatoApiKey: "YOUR_GELATO_SPONSOR_API_KEY", // Replace with your API key
+    gelatoApiKey: "Q5fbaCZUVQBXGJ5wVcmCFx3a2CkdKg5ryfByFIHdRW4_", // Replace with your API key
     
     // Domain for EIP-712 signing
     permitDomain: {

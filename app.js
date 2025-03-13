@@ -72,7 +72,7 @@ async function init() {
             console.error("Error checking accounts:", error);
         }
     } else {
-        log("MetaMask is not installed. Please install it to use this application.");
+        console.log("MetaMask is not installed. Please install it to use this application.");
         updateStepStatus('step-connect', 'error', 'MetaMask not found');
     }
 }
@@ -418,3 +418,55 @@ async function getPermitSignature() {
         log(`Error getting signature: ${error.message}`);
         throw new Error("Failed to get permit signature");
     }
+}
+
+/**
+ * Step 2: Sends the permit signature to the backend for verification.
+ */
+async function sendToBackend() {
+    // TODO: Implement backend verification
+
+}
+
+/**
+ * Step 3: Relays the transaction through Gelato.
+ */
+async function relayThroughGelato() {
+    // TODO: Implement Gelato relay
+}
+
+/**
+ * Step 4: Expands the swap using the Expand contract.
+ */
+async function executeExpandSwap() {
+    // TODO: Implement Expand swap
+}
+
+/**
+ * Step 5: Checks for swap completion.
+ */ 
+async function checkSwapCompletion() {
+    // TODO: Implement swap completion check
+}
+
+/**
+ * Resets the step statuses to their initial state.
+ */         
+function resetSteps() {
+    updateStepStatus('step-connect', 'waiting', '');
+    updateStepStatus('step-signature', 'waiting', '');
+    updateStepStatus('step-backend', 'waiting', '');
+    updateStepStatus('step-gelato', 'waiting', '');
+    updateStepStatus('step-expand', 'waiting', '');
+}
+
+/**
+ * Updates the status of a step in the UI.
+ */
+function updateStepStatus(stepId, status, message) {
+    const stepElement = document.getElementById(stepId);
+    if (stepElement) {
+        stepElement.classList.remove('active', 'success', 'error', 'waiting');
+        stepElement.classList.add(status);
+    }
+}
